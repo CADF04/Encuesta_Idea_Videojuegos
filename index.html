@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16143F">
+<title>Ideas de videojuegos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="16" width="56" height="32" rx="14"/><path d="M20 26v12M14 32h12"/><circle cx="43" cy="29" r="2.5" fill="currentColor"/><circle cx="50" cy="36" r="2.5" fill="currentColor"/></svg>
+      <span>Encuesta de ideas</span>
+    </div>
+    <ol class="stepper" id="stepper" aria-label="Progreso de la encuesta"></ol>
+  </div>
+</header>
+<div class="sr" id="live" aria-live="polite"></div>
+
+<main class="wrap">
+  <form id="survey" novalidate autocomplete="off">
+    <!-- Anti-spam: los humanos no lo ven -->
+    <div class="hp" aria-hidden="true">
+      <label>No llenar este campo <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+    </div>
+
+    <!-- Inicio -->
+    <section class="step intro" data-kind="intro">
+      <div class="trio" id="trio" aria-hidden="true"></div>
+      <h1 tabindex="-1">Propuestas de videojuegos</h1>
+      <p class="lead">Tengo 3 ideas y quiero saber cuál te engancha más</p>
+      <button type="button" class="btn btn-primary btn-xl" id="start">Empezar</button>
+      <p class="fine">Por favor responde honestamente</p>
+    </section>
+
+    <!-- Paso 1: Sobre ti -->
+    <section class="step card" data-kind="about">
+      <h2 tabindex="-1">Cuéntame cómo juegas</h2>
+
+      <fieldset>
+        <legend>¿Qué tan seguido juegas videojuegos?</legend>
+        <div class="options">
+          <label class="opt"><input type="radio" name="frecuencia" value="Casi a diario"><span>Casi a diario</span></label>
+          <label class="opt"><input type="radio" name="frecuencia" value="Varias veces por semana"><span>Varias veces por semana</span></label>
+          <label class="opt"><input type="radio" name="frecuencia" value="Algunas veces al mes"><span>Algunas veces al mes</span></label>
+          <label class="opt"><input type="radio" name="frecuencia" value="Casi nunca"><span>Casi nunca</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>¿En qué plataformas juegas? <span class="hint">Marca todas las que uses</span></legend>
+        <div class="options inline">
+          <label class="opt"><input type="checkbox" name="plataformas" value="PC"><span>PC</span></label>
+          <label class="opt"><input type="checkbox" name="plataformas" value="Consola"><span>Consola</span></label>
+          <label class="opt"><input type="checkbox" name="plataformas" value="Celular"><span>Celular</span></label>
+          <label class="opt"><input type="checkbox" name="plataformas" value="Otra"><span>Otra</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>¿Qué géneros disfrutas más? <span class="hint">Marca todos los que quieras</span></legend>
+        <div class="options inline">
+          <label class="opt"><input type="checkbox" name="generos" value="Deportes"><span>Deportes</span></label>
+          <label class="opt"><input type="checkbox" name="generos" value="Simulación"><span>Simulación</span></label>
+          <label class="opt"><input type="checkbox" name="generos" value="Supervivencia"><span>Supervivencia</span></label>
+          <label class="opt"><input type="checkbox" name="generos" value="Acción-Aventura"><span>Acción-Aventura</span></label>
+          <label class="opt"><input type="checkbox" name="generos" value="Shooters / Battle Royale"><span>Shooters / Battle Royale</span></label>
+          <label class="opt"><input type="checkbox" name="generos" value="RPG"><span>RPG</span></label>
+          <label class="opt"><input type="checkbox" name="generos" value="Otro"><span>Otro</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><label for="favoritos" class="q" style="margin:0">¿Cuáles son tus 2 o 3 videojuegos favoritos ahora?</label></legend>
+        <input type="text" id="favoritos" name="favoritos" maxlength="200">
+      </fieldset>
+    </section>
+
+    <!-- Los pasos de cada idea se generan con JavaScript, en orden aleatorio -->
+
+    <!-- Paso final -->
+    <section class="step card" data-kind="final">
+      <h2 tabindex="-1">Para cerrar</h2>
+
+      <fieldset>
+        <legend>Toca las ideas en orden, de la que más jugarías a la que menos</legend>
+        <div class="rank" id="rank"></div>
+        <div class="rank-tools">
+          <span class="hint" id="rankHint">Toca primero la que más jugarías.</span>
+          <button type="button" class="link-btn" id="rankReset" hidden>Reiniciar orden</button>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Si este juego fuera de pago, ¿qué te parecería razonable?</legend>
+        <div class="options">
+          <label class="opt"><input type="radio" name="precio" value="Gratis, con compras opcionales"><span>Gratis, con compras opcionales</span></label>
+          <label class="opt"><input type="radio" name="precio" value="Pago único bajo"><span>Pago único bajo</span></label>
+          <label class="opt"><input type="radio" name="precio" value="Pago único medio"><span>Pago único medio</span></label>
+          <label class="opt"><input type="radio" name="precio" value="Pago único alto"><span>Pago único alto</span></label>
+          <label class="opt"><input type="radio" name="precio" value="No pagaría por un juego así"><span>No pagaría por un juego así</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><label for="comentario" class="q" style="margin:0">¿Qué le agregarías o cambiarías a la idea que elegiste primero?</label></legend>
+        <textarea id="comentario" name="comentario" maxlength="1000"></textarea>
+      </fieldset>
+
+      <fieldset>
+        <legend>¿Te gustaría probar una demo cuando exista?</legend>
+        <div class="options inline">
+          <label class="opt"><input type="radio" name="demo" value="Sí"><span>Sí</span></label>
+          <label class="opt"><input type="radio" name="demo" value="No"><span>No</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend><label for="contacto" class="q" style="margin:0">Tu nombre o contacto, por si quiero avisarte</label></legend>
+        <input type="text" id="contacto" name="contacto" maxlength="120">
+      </fieldset>
+    </section>
+
+    <!-- Gracias -->
+    <section class="step card" data-kind="thanks">
+      <div class="done" id="done">
+        <div class="seal" aria-hidden="true">
+          <svg width="52" height="52" viewBox="0 0 64 64" fill="none" stroke="#16143F" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 33l13 13 24-27"/></svg>
+        </div>
+        <h2 tabindex="-1">Gracias por responder</h2>
+        <p>Tus respuestas ya quedaron guardadas. Con ellas voy a decidir qué idea desarrollar primero.</p>
+      </div>
+    </section>
+
+    <div class="error" id="error" role="alert"></div>
+
+    <div class="actionbar" id="actionbar">
+      <div class="actionbar-in">
+        <button type="button" class="btn btn-ghost" id="back">Atrás</button>
+        <button type="button" class="btn btn-primary" id="next">Siguiente</button>
+      </div>
+    </div>
+  </form>
+</main>
+
+<script src="app.js" defer></script>
+</body>
+</html>
